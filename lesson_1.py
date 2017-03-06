@@ -1,7 +1,6 @@
 import numpy as np
 
-def _sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+from helpers import sigmoid
 
 def learn_simple_net(X, y):
     # This function learns the weights for the simplest possible "neural net":
@@ -15,12 +14,12 @@ def learn_simple_net(X, y):
     W = np.random.randn(3, 1)
     for i in range(500):
         A = np.dot(X, W)
-        P = _sigmoid(A)
+        P = sigmoid(A)
         L = 0.5 * (y - P) ** 2
         if i % 50 == 0:
             print P
         dLdP = -1.0 * (y - P)
-        dPdA = _sigmoid(A) * (1.0 - _sigmoid(A))
+        dPdA = sigmoid(A) * (1.0 - _sigmoid(A))
         dLdA = dLdP * dPdA
         dAdW = X.T
         dLdW = np.dot(dAdW, dLdA)
@@ -32,7 +31,7 @@ def predict_with_simple_net(X, W):
     # using the 'learn_simple_net' function above and returns the prediction
     # that the function makes using these weights.
     A = np.dot(X, W)
-    P = _sigmoid(A)
+    P = sigmoid(A)
     return P
 
 if __name__ == "__main__":

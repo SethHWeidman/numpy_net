@@ -1,7 +1,6 @@
 import numpy as np
 
-def _sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+from helpers import sigmoid
 
 def learn_complex_net(X, y):
     # This function learns the weights for a neural net that calculates one set
