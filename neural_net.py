@@ -1,11 +1,12 @@
 '''Class objects for neural net'''
 import numpy as np
 from activation_functions import sigmoid
+from python_custom.misc import list_index_wraparound
+from helpers import set_learning_rate
 
 class NeuralNetwork:
-    def __init__(self, layers, random_seed=None):
+    def __init__(self, layers):
         self.layers = layers
-        self.random_seed = random_seed
 
     def forwardpass(self, X):
         """ Calculate an output Y for the given input X. """
@@ -42,12 +43,17 @@ class Layer(object):
 
 
 class Linear(Layer):
-    def __init__(self, n_in, n_out, activation_function, random_seed=None):
+    def __init__(self, n_in, n_out, 
+                 activation_function, 
+                 random_seed, 
+                 learning_rates=[]):
         self.random_seed=random_seed
         np.random.seed(seed=self.random_seed)
         self.W = np.random.normal(loc=0.0, scale=1, size=(n_in, n_out))
         self.activation_function = activation_function
-
+        self.learning_rates = learning_rates
+        self.iteration = 0
+        
     def fprop(self, layer_input):
         self.layer_input = layer_input
         self.activation_input = np.dot(layer_input, self.W)
@@ -58,6 +64,14 @@ class Linear(Layer):
         dLdAi = layer_grad * dPdAi
         dAodAi = self.layer_input.T
         output_grad = np.dot(dLdAi, self.W.T)
-        W_new = self.W - np.dot(dAodAi, dLdAi)
+        current_learning_rate = set_learning_rate(self.learning_rates, 
+                                                  self.iteration)
+        # if self.iteration % 100 == 0:
+        #     print("The current learning rate is ", current_learning_rate)
+        W_new = self.W - current_learning_rate * np.dot(dAodAi, dLdAi)
         self.W = W_new
+        self.iteration += 1
         return output_grad
+    
+
+
