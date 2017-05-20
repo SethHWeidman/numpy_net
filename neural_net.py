@@ -1,8 +1,11 @@
 '''Class objects for neural net'''
+import math
 import numpy as np
+
 from activation_functions import sigmoid
 from python_custom.misc import list_index_wraparound
 from helpers import set_learning_rate
+from scipy.stats import truncnorm
 
 class NeuralNetwork:
     def __init__(self, layers):
@@ -46,10 +49,23 @@ class Linear(Layer):
     def __init__(self, n_in, n_out, 
                  activation_function, 
                  random_seed, 
-                 learning_rates=[]):
+                 learning_rates=[], 
+                 weights_scale=1, 
+                 weights_shape="normal",
+                 truncation=2):
         self.random_seed=random_seed
         np.random.seed(seed=self.random_seed)
-        self.W = np.random.normal(loc=0.0, scale=1, size=(n_in, n_out))
+        if weights_scale == "xavier":
+            weights_scale = 1.0 / math.sqrt(n_in)
+
+        if weights_shape=="normal":
+            self.W = np.random.normal(loc=0.0, scale=weights_scale, size=(n_in, n_out))
+        elif weights_shape=="truncated":
+            self.W = truncnorm.rvs(-1.0 * truncation, truncation, 
+                                   scale=weights_scale, size=(n_in, n_out),
+                                   random_state=self.random_seed)
+        else:
+            return "Invalid weights shape" 
         self.activation_function = activation_function
         self.learning_rates = learning_rates
         self.iteration = 0
