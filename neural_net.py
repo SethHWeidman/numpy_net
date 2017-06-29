@@ -8,8 +8,36 @@ from helpers import set_learning_rate
 from scipy.stats import truncnorm
 
 class NeuralNetwork(object):
-    def __init__(self, layers, random_seed, learning_rate_layer_decay=1,
-                 learning_rate, dropout, drop_connect, iteration):
+    """Class for a neural network that can learn arbitrarily complicated
+    relationships between input and output.
+    """
+    def __init__(self, layers, random_seed,
+                 learning_rate_layer_decay=1,
+                 learning_rate=1.0,
+                 dropout=1.0,
+                 drop_connect=1.0):
+        """The function that initializes the neural network.
+
+        Parameters
+        ----------
+        layers : list
+            a list of the layers that the input will be passed through to
+            generate the output
+        random_seed : int
+            the random seed to use when initializing the weights in each layer
+        learning_rate : float
+            the learning rate that will be used at the first (closest to input)
+            layer of the network
+        learning_rate_layer_decay : float
+            the amount that the learning rate will decay by as we move forward
+            in the layers
+        dropout : float
+            the proportion of neurons to keep in each layer if applying dropout
+        drop_connect : float
+            the proportion of weights to keep in each layer if applying drop
+            connect
+        """
+
         self.layers = layers
         self.random_seed = random_seed
         self.learning_rate = learning_rate

@@ -2,14 +2,6 @@
 
 Need to organize things
 
-# Features implemented
-
-Step one: I need to combine the features that are currently in two different
-places into one common place.
-
-## Features in `neural_net.py` but not the talk
-
-
 ## Basic features in neither
 
 * Num epochs
